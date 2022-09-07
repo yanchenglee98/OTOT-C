@@ -11,8 +11,17 @@ const app = express();
 
 app.use(express.json());
 
+
+// requires a token
 app.get("/welcome", auth, (req, res) => {
     res.status(200).send("Welcome 🙌 ");
+});
+
+// requires a token to authorize viewing of user details
+app.get("/:id", auth, async (req, res) => {
+    const {id} = req.params;
+    const user = await User.findById(id).select('-__v').lean();;
+    res.status(200).json(user);
 });
 
 // Register
@@ -39,19 +48,19 @@ app.post("/register", async (req, res) => {
     
         // Create user in our database
         const user = await User.create({
-          first_name,
-          last_name,
-          email: email.toLowerCase(), // sanitize: convert email to lowercase
-          password: encryptedPassword,
+            first_name,
+            last_name,
+            email: email.toLowerCase(), // sanitize: convert email to lowercase
+            password: encryptedPassword,
         });
     
         // Create token
         const token = jwt.sign(
-          { user_id: user._id, email },
-          process.env.TOKEN_KEY,
-          {
+            { user_id: user._id, email },
+            process.env.TOKEN_KEY,
+            {
             expiresIn: "2h",
-          }
+            }
         );
         // save user token
         user.token = token;
@@ -84,7 +93,7 @@ app.post("/login", async (req, res) => {
             {
               expiresIn: "2h",
             }
-          );
+        );
     
           // save user token
           user.token = token;
