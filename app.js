@@ -20,7 +20,14 @@ app.get("/welcome", auth, (req, res) => {
 // requires a token to authorize viewing of user details
 app.get("/:id", auth, async (req, res) => {
     const {id} = req.params;
-    const user = await User.findById(id).select('-__v').lean();;
+    const user = await User.findById(id).select('-__v').lean();
+    res.status(200).json(user);
+});
+
+// requires a token to authorize deletion of user details
+app.delete("/:id", auth, async (req, res) => {
+    const {id} = req.params;
+    const user = await User.findByIdAndDelete(id).select('-__v').lean();
     res.status(200).json(user);
 });
 
