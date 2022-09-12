@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("./model/user");
 const auth = require("./middleware/auth");
+const verify = require("./middleware/verify")
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.get("/welcome", auth, (req, res) => {
 });
 
 // requires a token to authorize viewing of user details
-app.get("/:id", auth, async (req, res) => {
+app.get("/:id", verify, async (req, res) => {
     const {id} = req.params;
     const user = await User.findById(id).select('-__v').lean();
     res.status(200).json(user);
