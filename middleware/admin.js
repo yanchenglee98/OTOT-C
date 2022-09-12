@@ -16,7 +16,7 @@ const verifyAdmin = (req, res, next) => {
         console.log(decoded);
         if (decoded.role != 'admin') {
             console.log(decoded.role);
-            return res.status(401).send("You do not have admin privileges");
+            return res.status(403).send("You do not have admin privileges");
         }
     } catch (err) {
         return res.status(401).send("Invalid Token");
