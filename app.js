@@ -18,8 +18,10 @@ app.get("/welcome", auth, (req, res) => {
     res.status(200).send("Welcome 🙌 ");
 });
 
+var roles = ["admin"];
+
 // requires a token to authorize viewing of admin
-app.get("/admin", admin, (req, res) => {
+app.get("/admin", admin(roles), (req, res) => {
   res.status(200).json("You are an admin");
 });
 
